@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.devtools.ksp")
 }
 android {
     namespace = "com.example.myapplicationhome"
     compileSdk {
-        version = release(36)
+        version = release(35)
     }
 
     defaultConfig {
         applicationId = "com.example.myapplicationhome"
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -48,9 +49,15 @@ dependencies {
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+
     //room
-    implementation("androidx.room:room-runtime:2.8.4")
-    implementation("androidx.room:room-ktx:2.8.4")
+    val room_version = "2.6.1"
+    // Room runtime
+    implementation("androidx.room:room-runtime:$room_version")
+    // Kotlin extensions & Coroutines support
+    implementation("androidx.room:room-ktx:$room_version")
+    // Annotation Processor (KSP - recommended)
+    ksp("androidx.room:room-compiler:$room_version")
 
 // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
