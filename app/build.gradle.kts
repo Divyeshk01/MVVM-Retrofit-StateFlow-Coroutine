@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.android)
 }
 android {
     namespace = "com.example.myapplicationhome"
@@ -32,43 +32,38 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
-        dataBinding = true
+        viewBinding = true
     }
-}
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 
+}
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    //room
-    val room_version = "2.6.1"
-    // Room runtime
-    implementation("androidx.room:room-runtime:$room_version")
-    // Kotlin extensions & Coroutines support
-    implementation("androidx.room:room-ktx:$room_version")
-    // Annotation Processor (KSP - recommended)
-    ksp("androidx.room:room-compiler:$room_version")
 
-// ViewModel
+    // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
 
-// LiveData
+    // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
 
-// Activity KTX
+    // Activity KTX
     implementation("androidx.activity:activity-ktx:1.9.0")
 
-// Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 }

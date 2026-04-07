@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplicationhome.AppActivity
 import com.example.myapplicationhome.R
 import com.example.myapplicationhome.data.bean.Status
-import com.example.myapplicationhome.data.local.UserEntity
 import com.example.myapplicationhome.databinding.ActivityMainBinding
 import com.example.myapplicationhome.di.UserAdapter
 import kotlinx.coroutines.launch
@@ -26,31 +22,15 @@ class MainActivity : AppActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding=ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
-
-        initObserver()
-        vm.callUserInfo()
-        setupListeners()
-        vm.observeUsers()
+        setContentView(binding.root)
         adapter = UserAdapter()
 
         binding.rvData.layoutManager = LinearLayoutManager(this)
         binding.rvData.adapter = adapter
+        initObserver()
+        vm.callUserInfo()
     }
-    private fun setupListeners() {
 
-        binding.etSearch.addTextChangedListener {
-            vm.setSearch(it.toString())
-        }
-
-        binding.btnAsc.setOnClickListener {
-            vm.setSort("ASC")
-        }
-
-        binding.btnDesc.setOnClickListener {
-            vm.setSort("DESC")
-        }
-    }
     private fun initObserver() {
         lifecycleScope.launch {
             vm.obrCallUserInfo.collect { result ->
@@ -61,8 +41,9 @@ class MainActivity : AppActivity() {
 
                     Status.SUCCESS -> {
                         dismissProgressDialog()
-                        val mapList = result.data?.map { UserEntity(name = it.name, email = it.email, phone = it.phone) }
-                        vm.insertData(mapList ?: emptyList())
+                        Toast.makeText(this@MainActivity,"sucess ${result.data.toString()} ", Toast.LENGTH_LONG).show()
+                        adapter.setData(result.data ?: emptyList())
+
                     }
 
                     Status.ERROR -> {
@@ -77,12 +58,7 @@ class MainActivity : AppActivity() {
                 }
             }
         }
-        lifecycleScope.launch {
-            vm.obrCallListUser.collect {
-                adapter.setData(it)
-                Toast.makeText(this@MainActivity, it.toString(),Toast.LENGTH_LONG)
-            }
-        }
+
     }
 
 }
