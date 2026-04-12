@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplicationhome.AppActivity
 import com.example.myapplicationhome.R
 import com.example.myapplicationhome.data.bean.Status
+import com.example.myapplicationhome.data.local.UserEntity
 import com.example.myapplicationhome.databinding.ActivityMainBinding
 import com.example.myapplicationhome.di.UserAdapter
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ class MainActivity : AppActivity() {
         binding.rvData.layoutManager = LinearLayoutManager(this)
         binding.rvData.adapter = adapter
         initObserver()
+        vm.fetchListData()
         vm.callUserInfo()
     }
 
@@ -42,8 +44,9 @@ class MainActivity : AppActivity() {
                     Status.SUCCESS -> {
                         dismissProgressDialog()
                         Toast.makeText(this@MainActivity,"sucess ${result.data.toString()} ", Toast.LENGTH_LONG).show()
-                        adapter.setData(result.data ?: emptyList())
-
+                        val finalList = result.data?.map { user -> UserEntity(name = user.name, email = user.email) } ?: emptyList()
+                        //clear
+                        vm.insertList(finalList)
                     }
 
                     Status.ERROR -> {
@@ -58,7 +61,10 @@ class MainActivity : AppActivity() {
                 }
             }
         }
-
+        lifecycleScope.launch {
+            vm.obrLocalDataInfo.collect{
+                adapter.setData(it)
+            }
+        }
     }
-
 }

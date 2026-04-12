@@ -15,23 +15,28 @@ import com.example.myapplicationhome.R
 class SpinnerLoader(context: Context) : Dialog(context) {
 
     init {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.loader,null)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.loader, null)
+
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(view)
+
         setCancelable(false)
         setCanceledOnTouchOutside(false)
-        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-        window?.setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        window?.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            setDimAmount(0f) // 0 = no dim
-        }
-        // 🔥 remove dim ONLY for this dialog
-        val params = window?.attributes
-        params?.flags = params.flags and
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
-        window?.attributes = params
-    }
 
+        window?.apply {
+            setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+
+            setLayout(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+
+            addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            setDimAmount(0f) // no background dim
+
+            val params = attributes
+            attributes = params
+        }
+    }
 }

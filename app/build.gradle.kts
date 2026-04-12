@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+
 }
 android {
     namespace = "com.example.myapplicationhome"
@@ -34,10 +36,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
-
 }
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -66,4 +69,16 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+    val room_version = "2.6.1" // Use the latest stable version
+
+    // Core Room runtime
+    implementation("androidx.room:room-runtime:$room_version")
+
+    // Kotlin Symbol Processing (KSP) for code generation
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // Optional: Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
 }
